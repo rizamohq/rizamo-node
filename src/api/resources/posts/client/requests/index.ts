@@ -1,0 +1,10 @@
+export { CreatePostsRequest } from "./CreatePostsRequest.js";
+export type { DeletePostsRequest } from "./DeletePostsRequest.js";
+export type { GetPostsRequest } from "./GetPostsRequest.js";
+export type { ListPostsRequest } from "./ListPostsRequest.js";
+export type { PublishPostsRequest } from "./PublishPostsRequest.js";
+export type { RestorePostsRequest } from "./RestorePostsRequest.js";
+export type { SharePostsRequest } from "./SharePostsRequest.js";
+export type { UnsharePostsRequest } from "./UnsharePostsRequest.js";
+export { UpdatePostsRequest } from "./UpdatePostsRequest.js";
+export { ValidatePostsRequest } from "./ValidatePostsRequest.js";
