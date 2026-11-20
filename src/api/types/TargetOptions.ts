@@ -147,7 +147,7 @@ export namespace TargetOptions {
         /** Send it to the creator's TikTok inbox as a draft instead of publishing. The person finishes it in the TikTok app, where TikTok asks for every other choice; the target is published once it reaches the inbox, with no link. */
         draft?: boolean | undefined;
         /** Required to publish: the person saw the post, the account's name and these choices, and agreed to TikTok's Music Usage Confirmation (and its Branded Content Policy for branded content). Never set it without asking. */
-        consent?: string | undefined;
+        consent?: boolean | undefined;
     }
 
     export namespace Tiktok {
@@ -241,7 +241,7 @@ export namespace TargetOptions {
             /** 2 to 4 answers, each up to 30 characters. */
             options: string[];
             /** How long it stays open: 1, 3, 7 or 14 days. Left out: 7. */
-            days?: string | undefined;
+            days?: number | undefined;
         }
 
         /** Profiles only: who sees the post, anyone (public, the default) or the person's connections. */
