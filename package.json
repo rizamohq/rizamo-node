@@ -1,6 +1,6 @@
 {
     "name": "rizamo",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "private": false,
     "repository": {
         "type": "git",
@@ -242,5 +242,32 @@
     "engines": {
         "node": ">=18.0.0"
     },
-    "sideEffects": false
+    "sideEffects": false,
+    "description": "The official TypeScript SDK for the Rizamo API: publish, schedule and measure social posts on Instagram, Facebook, TikTok, Threads, LinkedIn and YouTube, answer comments and messages, and receive webhooks.",
+    "keywords": [
+        "rizamo",
+        "social-media",
+        "social-media-api",
+        "social-media-scheduler",
+        "instagram-api",
+        "facebook-api",
+        "tiktok-api",
+        "threads-api",
+        "linkedin-api",
+        "youtube-api",
+        "schedule-posts",
+        "publishing",
+        "ai-agents",
+        "mcp",
+        "sdk"
+    ],
+    "homepage": "https://docs.rizamo.com/sdks",
+    "author": {
+        "name": "Rizamo",
+        "email": "hi@rizamo.com",
+        "url": "https://rizamo.com"
+    },
+    "bugs": {
+        "url": "https://github.com/rizamohq/rizamo-node/issues"
+    }
 }
