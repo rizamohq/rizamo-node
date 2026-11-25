@@ -11,7 +11,7 @@ import type * as Rizamo from "../../../../index.js";
  *     }
  */
 export interface LinkConnectRequest {
-    /** Where the person logs in: instagram (Instagram Login, a professional account on its own), facebook (Facebook Login: Pages and the Instagram accounts linked to them), tiktok, threads or youtube. LinkedIn connects in the web app only, as LinkedIn's terms ask: no connect link offers it. Once connected there, LinkedIn accounts publish and report through the API and MCP. */
+    /** Where the person logs in: instagram (Instagram Login, a professional account on its own), facebook (Facebook Login: Pages and the Instagram accounts linked to them), tiktok, threads, youtube or google (Google Business Profile: the locations the person owns or manages, each one account). LinkedIn connects in the web app only, as LinkedIn's terms ask: no connect link offers it. Once connected there, LinkedIn accounts publish and report through the API and MCP. */
     network: Rizamo.LinkConnectRequestNetwork;
     /** The profile (`prof_`) new accounts go to. Required unless `connectionId` is given. */
     profileId?: string;
