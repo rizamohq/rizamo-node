@@ -7,5 +7,6 @@ export const LinkConnectRequestNetwork = {
     Tiktok: "tiktok",
     Threads: "threads",
     Youtube: "youtube",
+    Google: "google",
 } as const;
 export type LinkConnectRequestNetwork = (typeof LinkConnectRequestNetwork)[keyof typeof LinkConnectRequestNetwork];

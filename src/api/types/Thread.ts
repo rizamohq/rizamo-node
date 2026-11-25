@@ -7,8 +7,10 @@ export interface Thread {
     profileId: string;
     accountId: string;
     network: Rizamo.Network;
-    /** comment: a first comment on a post, with the replies under it. dm: private messages with one person. mention and review: not collected yet. */
+    /** comment: a first comment on a post, with the replies under it. dm: private messages with one person. review: a Google Business Profile review (the first message), with the business's one reply, which replying again replaces. mention: not collected yet. */
     kind: Thread.Kind;
+    /** Reviews: the stars, the reviewer's photos and videos, and Google's check of the reply. Null for every other kind. */
+    review: Thread.Review | null;
     /** The person on the other side. Null on a comment the account wrote itself ("Your comment"), which arrives done since there is nothing to answer, until someone replies to it: then it opens again with that person. */
     contact: Rizamo.Contact | null;
     /** Comments: the Rizamo post (`post_`) the comment is on, when it went out through Rizamo. Null on posts made elsewhere, and for messages. */
@@ -28,7 +30,7 @@ export interface Thread {
 }
 
 export namespace Thread {
-    /** comment: a first comment on a post, with the replies under it. dm: private messages with one person. mention and review: not collected yet. */
+    /** comment: a first comment on a post, with the replies under it. dm: private messages with one person. review: a Google Business Profile review (the first message), with the business's one reply, which replying again replaces. mention: not collected yet. */
     export const Kind = {
         Comment: "comment",
         Dm: "dm",
@@ -36,6 +38,52 @@ export namespace Thread {
         Review: "review",
     } as const;
     export type Kind = (typeof Kind)[keyof typeof Kind];
+
+    export interface Review {
+        /** The reviewer's stars, 1 to 5, as last read: a reviewer can change them. Null when Google gives none. */
+        rating: number | null;
+        /** Photos and videos the reviewer added, as Google's links. */
+        media: Review.Media.Item[];
+        /** The business's one reply, as Google last showed it: the thread's outbound message. Null before there is one. */
+        reply: Review.Reply | null;
+    }
+
+    export namespace Review {
+        export type Media = Media.Item[];
+
+        export namespace Media {
+            export interface Item {
+                type: Item.Type;
+                url: string;
+            }
+
+            export namespace Item {
+                export const Type = {
+                    Photo: "photo",
+                    Video: "video",
+                } as const;
+                export type Type = (typeof Type)[keyof typeof Type];
+            }
+        }
+
+        export interface Reply {
+            /** Google's check of the business's reply: `pending` until Google approves it (usually minutes, at times up to 30 days), `approved`, or `rejected` with why in `issue`. */
+            state: Reply.State;
+            /** Why Google rejected the reply, in its words, when `state` is `rejected`. */
+            issue: string | null;
+        }
+
+        export namespace Reply {
+            /** Google's check of the business's reply: `pending` until Google approves it (usually minutes, at times up to 30 days), `approved`, or `rejected` with why in `issue`. */
+            export const State = {
+                Pending: "pending",
+                Approved: "approved",
+                Rejected: "rejected",
+            } as const;
+            export type State = (typeof State)[keyof typeof State];
+        }
+    }
+
     export const Status = {
         Open: "open",
         Done: "done",

@@ -333,4 +333,138 @@ export class AnalyticsClient {
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/analytics/audience");
     }
+
+    /**
+     * What people searched on Google Search and Maps when they found each Google Business Profile location in reach, by month, as Google ranks them: each keyword with the times the location showed for it, or under Google's threshold only that threshold. Rizamo reads the last 12 complete months, each again until a week into the next month (Google fills a month about 5 days in) and before it is 30 days old. A location with no month read yet has no items. A page at a time, the newest month first, a location and month an item.
+     *
+     * @param {Rizamo.KeywordsAnalyticsRequest} request
+     * @param {AnalyticsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Rizamo.BadRequestError}
+     * @throws {@link Rizamo.UnauthorizedError}
+     * @throws {@link Rizamo.ForbiddenError}
+     * @throws {@link Rizamo.NotFoundError}
+     * @throws {@link Rizamo.TooManyRequestsError}
+     * @throws {@link Rizamo.InternalServerError}
+     * @throws {@link Rizamo.ServiceUnavailableError}
+     * @throws {@link errors.RizamoError}
+     * @throws {@link errors.RizamoTimeoutError}
+     *
+     * @example
+     *     await client.analytics.keywords({
+     *         profileId: "prof_01m40k9k80fxd8cvng8derm7g9",
+     *         from: "2026-10",
+     *         to: "2026-10"
+     *     })
+     */
+    public async keywords(
+        request: Rizamo.KeywordsAnalyticsRequest = {},
+        requestOptions?: AnalyticsClient.RequestOptions,
+    ): Promise<core.Page<Rizamo.KeywordsAnalyticsResponse.Items.Item, Rizamo.KeywordsAnalyticsResponse>> {
+        const list = core.HttpResponsePromise.interceptFunction(
+            async (
+                request: Rizamo.KeywordsAnalyticsRequest,
+            ): Promise<core.WithRawResponse<Rizamo.KeywordsAnalyticsResponse>> => {
+                const { profileId, accountId, from: from_, to, limit, cursor } = request;
+                const _queryParams: Record<string, unknown> = {
+                    profileId,
+                    accountId,
+                    from: from_,
+                    to,
+                    limit,
+                    cursor,
+                };
+                const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+                const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+                    _authRequest.headers,
+                    this._options?.headers,
+                    requestOptions?.headers,
+                );
+                const _response = await core.fetcher({
+                    url: core.url.join(
+                        (await core.Supplier.get(this._options.baseUrl)) ??
+                            (await core.Supplier.get(this._options.environment)) ??
+                            environments.RizamoEnvironment.Production,
+                        "analytics/keywords",
+                    ),
+                    method: "GET",
+                    headers: _headers,
+                    queryString: core.url
+                        .queryBuilder()
+                        .addMany(_queryParams)
+                        .mergeAdditional(requestOptions?.queryParams)
+                        .build(),
+                    timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+                    maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+                    abortSignal: requestOptions?.abortSignal,
+                    fetchFn: this._options?.fetch,
+                    logging: this._options.logging,
+                });
+                if (_response.ok) {
+                    return {
+                        data: _response.body as Rizamo.KeywordsAnalyticsResponse,
+                        rawResponse: _response.rawResponse,
+                    };
+                }
+                if (_response.error.reason === "status-code") {
+                    switch (_response.error.statusCode) {
+                        case 400:
+                            throw new Rizamo.BadRequestError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        case 401:
+                            throw new Rizamo.UnauthorizedError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        case 403:
+                            throw new Rizamo.ForbiddenError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        case 404:
+                            throw new Rizamo.NotFoundError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        case 429:
+                            throw new Rizamo.TooManyRequestsError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        case 500:
+                            throw new Rizamo.InternalServerError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        case 503:
+                            throw new Rizamo.ServiceUnavailableError(
+                                _response.error.body as Rizamo.Error_,
+                                _response.rawResponse,
+                            );
+                        default:
+                            throw new errors.RizamoError({
+                                statusCode: _response.error.statusCode,
+                                body: _response.error.body,
+                                rawResponse: _response.rawResponse,
+                            });
+                    }
+                }
+                return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/analytics/keywords");
+            },
+        );
+        const dataWithRawResponse = await list(request).withRawResponse();
+        return new core.Page<Rizamo.KeywordsAnalyticsResponse.Items.Item, Rizamo.KeywordsAnalyticsResponse>({
+            response: dataWithRawResponse.data,
+            rawResponse: dataWithRawResponse.rawResponse,
+            hasNextPage: (response) =>
+                response?.nextCursor != null &&
+                !(typeof response?.nextCursor === "string" && response?.nextCursor === ""),
+            getItems: (response) => response?.items ?? [],
+            loadPage: (response) => {
+                return list(core.setObjectProperty(request, "cursor", response?.nextCursor));
+            },
+        });
+    }
 }

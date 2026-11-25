@@ -16,6 +16,8 @@ export interface AnalyticsOverview {
     kpis: AnalyticsOverview.Kpis;
     /** The accounts' own numbers, added up over the period's days: views, engagements, follows, unfollows, profile_actions (taps on a profile's buttons) and more, as each network gives them, such as Facebook's profile_visits and video_views, Threads' views (its posts' views, which Meta's reference calls profile views), reposts, quotes and clicks (on links the profile shared), or YouTube's watch_time (in milliseconds, as every watch time) and follows and unfollows (subscribers gained and lost), 2 to 3 days late. Views and reach come split too, each part as the network gives it, so the parts need not add up to the whole: by followers (views_followers and views_non_followers on Instagram, Facebook Pages and YouTube, where they are subscribers or not; reach_followers and reach_non_followers on Instagram), by format (views_feed, views_carousel, views_reel and views_story on Instagram; views_short, views_video and views_live on YouTube) and by ads (views_paid on Instagram and Facebook Pages, views_organic on Facebook Pages). Only metrics in each network's reference are read. reach (people who saw the accounts' content: Instagram, Facebook Pages, and TikTok accounts with advanced access) and accounts_engaged (Instagram, and TikTok with advanced access) are each day's people added up, so someone reached on two days counts twice; missing where no account gives them. A day not collected adds nothing, and `notes` says so. */
     accountMetrics: Record<string, Rizamo.Kpi>;
+    /** Google Business Profile's own numbers, apart from every other network's, as Google asks: by Google's day, which come up to 6 days late (the last days fill in later). Missing when no Google Business Profile location is in reach. Google gives no numbers per post. */
+    google?: AnalyticsOverview.Google | undefined;
     /** Every day of the period, or with `interval` week or month every ISO week or calendar month, cut to the period. received: each account's own views of that day; each change between two of Rizamo's reads of a post (engagements, and views where an account's days give none) on the day it arrived, from the day its account was connected, a late network's first numbers (TikTok's, YouTube's) on the day the post went out, even a day before the period (left out of it then, and `notes` says so). publish: each post's numbers so far go on the day it was published. A week's or month's point is the period's totals over its days, as `kpis` and `byNetwork` count them: what arrived over them, a change over several of them included (by day it is in `combined`), followers on its last day, and the accounts' reach and accounts engaged added up. A number none of its days has is missing, never 0. */
     series: AnalyticsOverview.Series.Item[];
     /** received only (empty with publish): changes of posts Rizamo cannot place on one day (with `interval` week or month, in one week or month), never split, such as a stretch it could not read an account, or a post read every 30 days (YouTube every 28) after its first 90: engagements, and views only of accounts whose own days give none. In the totals and `byNetwork`, not in `series`. One that began before the period is left out, and what a post gathered before its account was connected is on no day. */
@@ -114,6 +116,32 @@ export namespace AnalyticsOverview {
             change?: number | undefined;
             /** The change in the period before. */
             previous?: number | undefined;
+        }
+    }
+
+    /**
+     * Google Business Profile's own numbers, apart from every other network's, as Google asks: by Google's day, which come up to 6 days late (the last days fill in later). Missing when no Google Business Profile location is in reach. Google gives no numbers per post.
+     */
+    export interface Google {
+        /** The locations' own numbers added up over the period's days: search_views_mobile, search_views_desktop, maps_views_mobile and maps_views_desktop (people who saw a Business Profile on Google Search or Maps, each once a day on each), calls, website_clicks, direction_requests, bookings and messaging_clicks. They count people who found the business, not views of posts, so they are never in `kpis.views` or `accountMetrics`. */
+        metrics: Record<string, Rizamo.Kpi>;
+        /** Each location in reach, with its own numbers. */
+        locations: Google.Locations.Item[];
+    }
+
+    export namespace Google {
+        export type Locations = Locations.Item[];
+
+        export namespace Locations {
+            export interface Item {
+                accountId: string;
+                /** The location's own numbers over the period's days, as `metrics` adds them up. */
+                metrics: Record<string, number>;
+                /** Its average review rating, 1 to 5 stars, as last read up to the period's last day. Missing before it was read. */
+                rating?: number | undefined;
+                /** Its reviews on Google, as last read up to the period's last day. Missing before it was read. */
+                reviewCount?: number | undefined;
+            }
         }
     }
 

@@ -549,7 +549,7 @@ await client.accounts.get({
 <dl>
 <dd>
 
-It stops publishing and is no longer billed, and nothing changes on its network. Its posts: one that goes to it alone moves to Deleted (`post.deleted`), scheduled, draft or published, and can be restored for 30 days; one with other accounts keeps them, loses this account's part that never went out (`post.updated`) and keeps the part that did, with its `url` and without its numbers (`accountRemoved` on the target). The answer counts them by status (`Preview removing an account` counts them before). Its name, picture and followers go at once; its handle stays to name those parts, with their links, for as long as their posts exist. What Rizamo read from the network about its posts there is deleted, and so are its comments and messages in the inbox, with the events that carry them (`comment.received`, `message.received`, `message.sent`, `comment_automation.*`) and their webhook deliveries. Its comment automations are paused (each with a `comment_automation.paused` event) and their runs deleted with the comments, so their numbers start again from zero and people they answered may be answered once more. It is told as `account.removed` with `reason` `removed_by_team`, never `account.disconnected`, which is a lost login. Connecting it again brings back the same account, its automations paused, to resume; posts in Deleted are restored by hand. Removing an account changes the bill, so only owners remove one, or an API key an owner let remove accounts and delete profiles when making it (Developers in the web app); other API keys are refused (403).
+It stops publishing and is no longer billed, and nothing changes on its network. Its posts: one that goes to it alone moves to Deleted (`post.deleted`), scheduled, draft or published, and can be restored for 30 days; one with other accounts keeps them, loses this account's part that never went out (`post.updated`) and keeps the part that did, with its `url` and without its numbers (`accountRemoved` on the target). The answer counts them by status (`Preview removing an account` counts them before). Its name, picture and followers go at once; its handle stays to name those parts, with their links, for as long as their posts exist. What Rizamo read from the network about its posts there is deleted, and so are its comments and messages in the inbox, with the events that carry them (`comment.received`, `message.received`, `message.sent`, `review.*`, `comment_automation.*`) and their webhook deliveries. Its comment automations are paused (each with a `comment_automation.paused` event) and their runs deleted with the comments, so their numbers start again from zero and people they answered may be answered once more. It is told as `account.removed` with `reason` `removed_by_team`, never `account.disconnected`, which is a lost login. Connecting it again brings back the same account, its automations paused, to resume; posts in Deleted are restored by hand. Removing an account changes the bill, so only owners remove one, or an API key an owner let remove accounts and delete profiles when making it (Developers in the web app); other API keys are refused (403).
 </dd>
 </dl>
 </dd>
@@ -4090,6 +4090,89 @@ await client.analytics.audience({
 </dl>
 </details>
 
+<details><summary><code>client.analytics.<a href="/src/api/resources/analytics/client/Client.ts">keywords</a>({ ...params }) -> core.Page&lt;Rizamo.KeywordsAnalyticsResponse.Items.Item, Rizamo.KeywordsAnalyticsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+What people searched on Google Search and Maps when they found each Google Business Profile location in reach, by month, as Google ranks them: each keyword with the times the location showed for it, or under Google's threshold only that threshold. Rizamo reads the last 12 complete months, each again until a week into the next month (Google fills a month about 5 days in) and before it is 30 days old. A location with no month read yet has no items. A page at a time, the newest month first, a location and month an item.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+const pageableResponse = await client.analytics.keywords({
+    profileId: "prof_01m40k9k80fxd8cvng8derm7g9",
+    from: "2026-10",
+    to: "2026-10"
+});
+for await (const item of pageableResponse) {
+    console.log(item);
+}
+
+// Or you can manually iterate page-by-page
+let page = await client.analytics.keywords({
+    profileId: "prof_01m40k9k80fxd8cvng8derm7g9",
+    from: "2026-10",
+    to: "2026-10"
+});
+while (page.hasNextPage()) {
+    page = await page.getNextPage();
+}
+
+// You can also access the underlying response
+const response = page.response;
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Rizamo.KeywordsAnalyticsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `AnalyticsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Billing
 <details><summary><code>client.billing.<a href="/src/api/resources/billing/client/Client.ts">get</a>() -> Rizamo.Billing</code></summary>
 <dl>
@@ -4159,7 +4242,7 @@ await client.billing.get();
 <dl>
 <dd>
 
-Every change on the team's posts and accounts in the last 30 days, newest first, with who made it: a person, an API key, an agent, or Rizamo itself; and the inbox's comments and messages as they arrive, the replies sent from Rizamo, and what comment automations do. The same events webhooks send, each as one item of this list. A page at a time: pass `nextCursor` as `cursor` for the next one. Someone limited to some profiles sees only those profiles' events. The inbox's and comment automations' events carry what people wrote: a key or agent reads them only with `inbox:read` (`comment.received`, `message.received`, `message.sent`) or `automations:read` (`comment_automation.*`) too; asking for one of those types without it answers 403.
+Every change on the team's posts and accounts in the last 30 days, newest first, with who made it: a person, an API key, an agent, or Rizamo itself; and the inbox's comments and messages as they arrive, the replies sent from Rizamo, and what comment automations do. The same events webhooks send, each as one item of this list. A page at a time: pass `nextCursor` as `cursor` for the next one. Someone limited to some profiles sees only those profiles' events. The inbox's and comment automations' events carry what people wrote: a key or agent reads them only with `inbox:read` (`comment.received`, `message.received`, `message.sent`, `review.*`) or `automations:read` (`comment_automation.*`) too; asking for one of those types without it answers 403.
 </dd>
 </dl>
 </dd>

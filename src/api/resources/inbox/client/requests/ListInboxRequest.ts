@@ -9,7 +9,7 @@ import type * as Rizamo from "../../../../index.js";
 export interface ListInboxRequest {
     /** open: still needs an answer. done: answered or closed; a new message opens it again. */
     status?: Rizamo.ListInboxRequestStatus;
-    /** comment: a first comment on a post, with the replies under it. dm: private messages with one person. mention and review: not collected yet. */
+    /** comment: a first comment on a post, with the replies under it. dm: private messages with one person. review: a Google Business Profile review (the first message), with the business's one reply, which replying again replaces. mention: not collected yet. */
     kind?: Rizamo.ListInboxRequestKind;
     /** Only this profile's (`prof_`): one brand or client, from List profiles. A profile you do not reach is refused as not found. */
     profileId?: string;

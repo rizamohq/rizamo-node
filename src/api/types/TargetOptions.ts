@@ -10,6 +10,7 @@ export interface TargetOptions {
     threads?: TargetOptions.Threads | undefined;
     linkedin?: TargetOptions.Linkedin | undefined;
     youtube?: TargetOptions.Youtube | undefined;
+    google?: TargetOptions.Google | undefined;
     pinterest?: TargetOptions.Pinterest | undefined;
 }
 
@@ -319,6 +320,48 @@ export namespace TargetOptions {
             CreativeCommon: "creativeCommon",
         } as const;
         export type License = (typeof License)[keyof typeof License];
+    }
+
+    export interface Google {
+        /** Updates and events: a button under the post. Not on offers, where Google shows its own View offer button. */
+        callToAction?: Google.CallToAction | undefined;
+        /** Events and offers (required): the title Google shows, up to 58 characters. Not on updates. */
+        title?: string | undefined;
+        /** Events and offers (required): when it starts, sent to Google in the profile's time zone. Not on updates. */
+        startsAt?: string | undefined;
+        /** Events and offers (required): when it ends, after it starts and after the post goes out. Not on updates. */
+        endsAt?: string | undefined;
+        /** Offers: a code people show in store or type online, up to 58 characters. An offer needs at least one of couponCode, redeemUrl and terms. */
+        couponCode?: string | undefined;
+        /** Offers: where people redeem it online. An offer needs at least one of couponCode, redeemUrl and terms. */
+        redeemUrl?: string | undefined;
+        /** Offers: terms and conditions, up to 1,500 characters. An offer needs at least one of couponCode, redeemUrl and terms. */
+        terms?: string | undefined;
+    }
+
+    export namespace Google {
+        /**
+         * Updates and events: a button under the post. Not on offers, where Google shows its own View offer button.
+         */
+        export interface CallToAction {
+            /** What the button says: book (Book), order (Order online), shop (Buy), learn_more (Learn more), sign_up (Sign up), call (Call now, which dials the profile's phone number). */
+            type: CallToAction.Type;
+            /** Where the button opens: required for every button but call, which takes none. */
+            url?: string | undefined;
+        }
+
+        export namespace CallToAction {
+            /** What the button says: book (Book), order (Order online), shop (Buy), learn_more (Learn more), sign_up (Sign up), call (Call now, which dials the profile's phone number). */
+            export const Type = {
+                Book: "book",
+                Order: "order",
+                Shop: "shop",
+                LearnMore: "learn_more",
+                SignUp: "sign_up",
+                Call: "call",
+            } as const;
+            export type Type = (typeof Type)[keyof typeof Type];
+        }
     }
 
     export interface Pinterest {

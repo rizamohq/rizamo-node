@@ -16,6 +16,8 @@ export const WebhookEventType = {
     CommentReceived: "comment.received",
     MessageReceived: "message.received",
     MessageSent: "message.sent",
+    ReviewReceived: "review.received",
+    ReviewUpdated: "review.updated",
     CommentAutomationSent: "comment_automation.sent",
     CommentAutomationFailed: "comment_automation.failed",
     CommentAutomationPaused: "comment_automation.paused",

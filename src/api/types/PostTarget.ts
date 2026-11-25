@@ -42,6 +42,8 @@ export namespace PostTarget {
         Photo: "photo",
         Document: "document",
         Pin: "pin",
+        Event: "event",
+        Offer: "offer",
     } as const;
     export type Format = (typeof Format)[keyof typeof Format];
     /** pending: waiting for its time. publishing: going out now. unknown: the network did not confirm and we could not tell whether it went out; check the account before publishing again. */

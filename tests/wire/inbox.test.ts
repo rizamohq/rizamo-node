@@ -17,6 +17,7 @@ describe("InboxClient", () => {
                     accountId: "acc_01m423bp00fz39kp5pc7m42tsw",
                     network: "instagram",
                     kind: "comment",
+                    review: null,
                     contact: {
                         name: "Marta Lopes",
                         handle: "@marta.lopes",
@@ -297,6 +298,7 @@ describe("InboxClient", () => {
                 accountId: "acc_01m423bp00fz39kp5pc7m42tsw",
                 network: "instagram",
                 kind: "comment",
+                review: null,
                 contact: {
                     name: "Marta Lopes",
                     handle: "@marta.lopes",
@@ -462,6 +464,7 @@ describe("InboxClient", () => {
             accountId: "acc_01m423bp00fz39kp5pc7m42tsw",
             network: "instagram",
             kind: "comment",
+            review: null,
             contact: { name: "Marta Lopes", handle: "@marta.lopes", initials: "ML", color: "#4FA3FF", avatarUrl: null },
             postId: "post_01m47bjzm0edmtk7w6gp7br39v",
             networkPostId: "npost_01m4fkyer0em9939e5rz4f89v7",

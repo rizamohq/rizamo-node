@@ -24,6 +24,7 @@ describe("AnalyticsClient", () => {
                 followers: { value: 36070, change: 214, previous: 187 },
             },
             accountMetrics: { profile_visits: { value: 1310, previous: 1184 }, follows: { value: 241, previous: 205 } },
+            google: { metrics: { key: {} }, locations: [{ accountId: "accountId", metrics: { key: 1.1 } }] },
             series: [
                 {
                     date: "2026-10-29",
@@ -760,6 +761,180 @@ describe("AnalyticsClient", () => {
 
         await expect(async () => {
             return await client.analytics.audience();
+        }).rejects.toThrow(Rizamo.ServiceUnavailableError);
+    });
+
+    test("keywords (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            from: "2026-10",
+            to: "2026-10",
+            items: [
+                {
+                    accountId: "acc_01m44gbp00e7ns2y8f6q3xw1kz",
+                    profileId: "prof_01m40k9k80fxd8cvng8derm7g9",
+                    month: "2026-10",
+                    keywords: [
+                        { keyword: "café near me", impressions: 412 },
+                        { keyword: "brunch porto", impressions: 168 },
+                        { keyword: "pastel de nata", below: 15 },
+                    ],
+                    readAt: "2026-11-08T10:02:11Z",
+                },
+            ],
+            nextCursor: null,
+        };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const expected = rawResponseBody;
+        const page = await client.analytics.keywords({
+            profileId: "prof_01m40k9k80fxd8cvng8derm7g9",
+            from: "2026-10",
+            to: "2026-10",
+        });
+
+        expect(expected.items).toEqual(page.data);
+    });
+
+    test("keywords (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
+        }).rejects.toThrow(Rizamo.BadRequestError);
+    });
+
+    test("keywords (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
+        }).rejects.toThrow(Rizamo.UnauthorizedError);
+    });
+
+    test("keywords (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
+        }).rejects.toThrow(Rizamo.ForbiddenError);
+    });
+
+    test("keywords (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
+        }).rejects.toThrow(Rizamo.NotFoundError);
+    });
+
+    test("keywords (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
+        }).rejects.toThrow(Rizamo.TooManyRequestsError);
+    });
+
+    test("keywords (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
+        }).rejects.toThrow(Rizamo.InternalServerError);
+    });
+
+    test("keywords (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RizamoClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "invalid_request", message: "message" }, requestId: "requestId" };
+
+        server
+            .mockEndpoint()
+            .get("/analytics/keywords")
+            .respondWith()
+            .statusCode(503)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.analytics.keywords();
         }).rejects.toThrow(Rizamo.ServiceUnavailableError);
     });
 });

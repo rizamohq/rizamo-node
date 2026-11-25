@@ -15,7 +15,7 @@ export interface UpdateWebhooksRequest {
     url?: string;
     /** What it is for, for the people of the team. */
     description?: string;
-    /** The event types it receives. Null: every type, those Rizamo adds later included. A key or agent lists the inbox's types (`comment.received`, `message.received`, `message.sent`) only with `inbox:read`, and `comment_automation.*` only with `automations:read`; with null, the endpoint gets none of those it cannot read. */
+    /** The event types it receives. Null: every type, those Rizamo adds later included. A key or agent lists the inbox's types (`comment.received`, `message.received`, `message.sent`, `review.*`) only with `inbox:read`, and `comment_automation.*` only with `automations:read`; with null, the endpoint gets none of those it cannot read. */
     events?: Rizamo.WebhookEventType[] | null;
     /** Only events of these profiles. Null: every profile's, and the events of no profile. Someone limited to some profiles gives some of theirs. */
     profileIds?: string[] | null;
