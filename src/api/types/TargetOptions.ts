@@ -296,6 +296,8 @@ export namespace TargetOptions {
         publishAt?: string | undefined;
         /** Discloses realistic altered or synthetic content (YouTube's `containsSyntheticMedia`). */
         isAiGenerated?: boolean | undefined;
+        /** Whether the video has paid product placement (YouTube's `hasPaidProductPlacement`): true declares it, false declares there is none. Left out, Rizamo sends nothing and the video declares nothing: since November 16, 2026, YouTube no longer reads a missing answer as false. It is the person's own declaration: ask them rather than guess. */
+        paidProductPlacement?: boolean | undefined;
         /** An image to use as the thumbnail (JPEG or PNG, up to 2 MB), set once the video is live. YouTube takes custom thumbnails only from channels it has verified. */
         thumbnailMediaId?: string | undefined;
         /** Whether YouTube tells subscribers about the video. Left out: yes, YouTube's default. */
